@@ -16,11 +16,11 @@ Video file / webcam
 
 | Area                                           | Role                                                            | Runs where                                  |
 | ---------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------- |
-| `dist/`                                        | Dependency-free static studio, media processing and ODS writer  | Browser; Vercel hosts its files             |
+| `dist/`                                        | Dependency-free static studio, media processing and ODS writer  | Browser; a static host may serve its files  |
 | `native/cli.py`                                | Convert, play or stream camera with terminal controls           | User's computer, no web server              |
 | `native/bridge.py`                             | Authenticated loopback frames and optional local static hosting | User's computer                             |
 | `backend/`                                     | Optional FastAPI multipart conversion using FFmpeg              | Local machine or separately managed service |
-| `scripts/`                                     | Node-only build, portable archive and release validation        | Developer machine, CI, Vercel build         |
+| `scripts/`                                     | Node-only build, portable archive and release validation        | Developer machine or CI                     |
 | `tests/`, `native/test_*.py`, `backend/tests/` | Core, DOM, protocol, CLI, ODS and FFmpeg checks                 | Developer machine or CI                     |
 
 The browser studio and CLI can each run independently. Neither requires the

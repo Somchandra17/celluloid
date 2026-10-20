@@ -152,7 +152,6 @@ export async function checkRelease(root = ROOT) {
     "native/bridge.py",
     "native/cli.py",
     "docs/CLI.md",
-    "docs/VERCEL.md",
     "scripts/build.mjs",
   ]) {
     if (!current.has(required))

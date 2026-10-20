@@ -163,7 +163,7 @@ python3 setup_celluloid.py \
   if you separately install Node 22+.
 
 The script starts local services; it does not set up login/startup services or
-publish a cloud deployment. Use the [Vercel guide](VERCEL.md) for hosting.
+publish a cloud deployment.
 
 ## Verification
 

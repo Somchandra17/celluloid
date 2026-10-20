@@ -4,10 +4,10 @@ Owner: Som Chandra. Started 19 October 2026.
 
 ## Outcome
 
-Deliver one GitHub-ready repository that can be imported into Vercel for the
-browser studio and used locally from a terminal to render video or live camera
-frames through real LibreOffice Calc cells. Keep Som's terminal/darkroom design
-and the existing upload, webcam, recording and ODS workflows intact.
+Deliver one GitHub-ready repository that can be used locally from a terminal
+to render video or live camera frames through real LibreOffice Calc cells.
+Keep Som's terminal/darkroom design and the existing upload, webcam, recording
+and ODS workflows intact. A personal Vercel deployment is not part of this plan.
 
 The initial pipeline and portable 1.1.0 release are already built. This pass
 closes verification gaps and fixes concrete defects found during acceptance
@@ -67,15 +67,16 @@ GitHub repository, no hosting identity or preconfigured remote, and the existing
 private preview refreshed with the exact committed source. Verification notes,
 the changelog and this execution log are included in that source archive.
 
-Acceptance: a downloadable source artifact matches the tested source and has a
-clear Vercel import path and terminal setup instructions.
+Acceptance: a downloadable source artifact matches the tested source and has
+terminal setup instructions.
 
 ## Work requiring Som's account or hardware
 
 These are recorded handoff items, not silent assumptions of success:
 
 - Publish the repository under Som's chosen GitHub account/name and visibility.
-- Import it into Som's Vercel account and configure the chosen domain's DNS.
+- Personal Vercel hosting was dropped. Do not deploy this on Som's account:
+  a hosted upload path is not wanted.
 - Check a physical camera and its OS permissions on the target computer.
 - Validate Windows/macOS UNO setup on matching installed releases.
 - Perform visual browser QA when a supported browser-control surface is

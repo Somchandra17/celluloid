@@ -98,9 +98,9 @@ run separately and passed as described below.
   shipped in the application.
 - Windows/macOS Python UNO setup. The README gives the requirement and a verified
   protocol, not a claim that an installer has been validated on every platform.
-- A deployment in the maintainer's own Vercel account, custom-domain DNS, and the
-  first GitHub Actions run. The ready-to-import configuration and CI workflow are
-  included; account-side publication is a separate action.
+- A deployment on the maintainer's own Vercel account. That plan was dropped:
+  the project is not to be hosted there. The first GitHub Actions run is still
+  a separate account-side check.
 
 The opt-in `scripts/check-native.py` and manual GitHub Actions workflow now
 reproduce full document-start, CLI playback, saved ODS reopening and final-color

@@ -65,11 +65,7 @@ setup.cmd
 ...dotfiles and remaining project documents
 ```
 
-Open the repository's **Actions** tab to see its checks. Then import that
-repository into Vercel with **Root Directory = repository root**, framework
-**Other**, install command `npm ci`, build command `npm run build`, and output
-directory `dist`. No application secrets are required for the static studio.
-See [the Vercel guide](docs/VERCEL.md) for your domain setup.
+Open the repository's **Actions** tab to see its checks.
 
-To run locally instead, use `bash setup.sh` on Linux/macOS or `.\setup.cmd` on
+To run locally, use `bash setup.sh` on Linux/macOS or `.\setup.cmd` on
 Windows. Prerequisites and permissions are covered in [the setup guide](docs/SETUP.md).

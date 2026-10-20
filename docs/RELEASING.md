@@ -47,10 +47,9 @@ git push -u origin main
 ```
 
 Replace `YOUR_ACCOUNT` with your account. No account handle is guessed in this
-source. Check GitHub Actions, then import the repository into Vercel using the
-[deployment guide](VERCEL.md). Domain/DNS and repository visibility remain choices
-in your own accounts. This preparation does not create a public repository or
-change your portfolio's domain.
+source. Check GitHub Actions. Repository visibility remains a choice in your own
+account. This preparation does not create a public repository or change your
+portfolio's domain.
 
 `npm run build` generates the source toolkit using a strict allowlist and fixed
 ZIP metadata. `npm run check:release` reads the archive back, checks checksums,

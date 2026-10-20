@@ -79,27 +79,6 @@ Custom UNO runtimes, ports and setup troubleshooting are covered in the
 [setup guide](docs/SETUP.md). Full native installation on physical Windows/Mac
 machines still needs acceptance testing; see [verification](docs/verification.md).
 
-## Deploy on your domain with Vercel
-
-Uploading through the GitHub website? Extract the source ZIP, then drag the
-folder's **contents** into **Add file → Upload files**. GitHub will not unpack a
-ZIP for you. Include hidden files and keep `package.json` at the repository root.
-[Step-by-step upload guide](UPLOAD_TO_GITHUB.md)
-
-Push this repository to GitHub and import it into Vercel. The included config uses:
-
-```text
-Framework: Other
-Install:   npm ci
-Build:     npm run build
-Output:    dist
-```
-
-Use Node 22+ (Node 24 LTS recommended). No secrets or environment variables are
-required. Add your domain in Vercel's project settings after deployment.
-The static build needs neither Python nor FFmpeg nor LibreOffice. Webcam and
-file processing happen in the visitor's browser. [Full deployment guide](docs/VERCEL.md)
-
 ## Run the web studio locally
 
 ```sh
@@ -327,7 +306,7 @@ python3 -m venv .venv
 ```
 
 Enter that URL under Advanced conversion. This explicit choice uploads the
-selected video to that service. The API is not part of the Vercel deployment.
+selected video to that service. That service is not part of the static site.
 Its local prototype has size, time and concurrency limits; Internet exposure
 needs authentication, user quotas and isolated workers. [Backend guide](backend/README.md)
 
