@@ -26,8 +26,8 @@ execution still need separate acceptance checks. See [verification](verification
 ## Publish your repository
 
 For GitHub's browser upload, follow [UPLOAD_TO_GITHUB.md](../UPLOAD_TO_GITHUB.md).
-Extract the ZIP and upload its contents at the repository root, including
-dotfiles; dragging the ZIP itself stores an archive rather than usable source.
+Extract the ZIP and upload its contents at the repository root. Dragging the
+ZIP itself stores an archive rather than usable source.
 The commands below are the alternative Git route.
 
 The portable toolkit/release directory deliberately has no hosting account

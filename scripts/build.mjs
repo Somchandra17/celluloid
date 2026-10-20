@@ -33,10 +33,7 @@ const sourceRootFiles = new Set([
   "setup.cmd",
   "vercel.json",
   ".gitignore",
-  ".gitattributes",
-  ".editorconfig",
   ".env.example",
-  ".prettierignore",
 ]);
 const excludedDirectories = new Set([
   ".git",
@@ -146,7 +143,7 @@ export function assertPortableFiles(files) {
       throw new Error(`Private or generated file in release: ${file.path}`);
     if (
       !textExtensions.test(file.path) &&
-      !["LICENSE", ".gitignore", ".gitattributes", ".editorconfig"].includes(
+      !["LICENSE", ".gitignore"].includes(
         file.path,
       )
     )

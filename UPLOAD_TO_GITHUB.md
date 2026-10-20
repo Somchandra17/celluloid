@@ -1,7 +1,7 @@
 # Upload Celluloid through the GitHub website
 
 This archive contains the complete repository source: web app, LibreOffice
-bridge, Linux/macOS/Windows setup launchers, docs, CI and Vercel configuration.
+bridge, Linux/macOS/Windows setup launchers, docs and CI.
 You do not need to install anything or build the app before uploading its source.
 
 ## Extract first
@@ -9,12 +9,6 @@ You do not need to install anything or build the app before uploading its source
 **GitHub does not unpack an uploaded ZIP into repository files.** Extract the
 ZIP on your computer and open its `celluloid` folder. Upload the **contents** of
 that folder, not the ZIP and not the enclosing `celluloid` folder.
-
-On a Mac, press **Command + Shift + .** in Finder to show hidden files before
-selecting the contents. Include `.github`, `.gitignore`, `.gitattributes`,
-`.editorconfig` and `.prettierignore` along with the visible files/folders.
-On Windows, use **Extract All** first; enable hidden items in File Explorer if
-any dotfiles are hidden.
 
 ## Upload
 
@@ -29,11 +23,7 @@ any dotfiles are hidden.
 4. Check that files such as `README.md`, `package.json`, `package-lock.json`,
    `vercel.json` and `setup_celluloid.py` appear directly at the repository root.
    They must not be nested under an extra `celluloid/` directory.
-5. Check that the upload includes `.github/workflows/ci.yml` and the other
-   dotfiles. If your browser omits a hidden path, add it using GitHub's
-   **Add file → Create new file** with its exact path/content, or use the Git
-   commands in [the release guide](docs/RELEASING.md).
-6. Enter a commit message such as `Initial Celluloid release` and commit/propose
+5. Enter a commit message such as `Initial Celluloid release` and commit/propose
    the changes as GitHub offers for your chosen branch.
 
 GitHub's [upload documentation](https://docs.github.com/en/repositories/working-with-files/managing-files/adding-a-file-to-a-repository)
@@ -46,7 +36,6 @@ excludes credentials, hosting identity, local recordings and dependencies.
 After committing, the repository root should resemble:
 
 ```text
-.github/
 backend/
 dist/
 docs/
@@ -62,7 +51,6 @@ vercel.json
 setup_celluloid.py
 setup.sh
 setup.cmd
-...dotfiles and remaining project documents
 ```
 
 Open the repository's **Actions** tab to see its checks.
