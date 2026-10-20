@@ -1,0 +1,5 @@
+node_modules/
+.openai/
+.vercel/
+dist/downloads/
+dist/assets/fonts/

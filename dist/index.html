@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en" data-world="nerdy" data-world-active="nerdy">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta
+      name="description"
+      content="Turn videos and your webcam into animated spreadsheet cells. Create and export real LibreOffice animations, entirely with open-source tools."
+    />
+    <title>celluloid · som</title>
+    <meta name="author" content="Som Chandra" />
+    <meta property="og:title" content="celluloid · som" />
+    <meta
+      property="og:description"
+      content="video, webcam, actual spreadsheet cells. a small open-source experiment by som."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/social-card.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="icon.svg" />
+    <link
+      rel="preload"
+      href="assets/fonts/space-grotesk.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      try {
+        const w = localStorage.getItem("celluloid-world");
+        if (w === "creative")
+          document.documentElement.dataset.world =
+            document.documentElement.dataset.worldActive = w;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <svg aria-hidden="true" class="symbols" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="i-upload" viewBox="0 0 24 24">
+        <path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5" />
+      </symbol>
+      <symbol id="i-camera" viewBox="0 0 24 24">
+        <path d="M15 9l6-3v12l-6-3" />
+        <rect x="3" y="6" width="12" height="12" rx="2" />
+      </symbol>
+      <symbol id="i-play" viewBox="0 0 24 24">
+        <path d="m9 5 11 7-11 7Z" />
+      </symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24">
+        <path d="M9 5v14M16 5v14" />
+      </symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-download" viewBox="0 0 24 24">
+        <path d="M12 3v13m-5-5 5 5 5-5M4 16v5h16v-5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <path d="M3 9h18M3 15h18M9 3v18M15 3v18" />
+      </symbol>
+      <symbol id="i-link" viewBox="0 0 24 24">
+        <path
+          d="m10 14 4-4m-6 5-1 1a4 4 0 0 1-6-6l5-5a4 4 0 0 1 6 0m0 4 1-1a4 4 0 0 1 6 6l-5 5a4 4 0 0 1-6 0"
+        />
+      </symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24">
+        <path d="m8 5 7 7-7 7" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="m5 12 4 4L19 6" />
+      </symbol>
+    </svg>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Celluloid home"
+        ><span class="brand-mark"><i></i><i></i><i></i><i></i></span
+        >celluloid<span class="beta">LAB</span></a
+      ><span class="top-caption">a small experiment by som.</span>
+      <nav>
+        <button class="text-button" id="how-button">
+          How it works <span>↗</span></button
+        ><a class="text-button" href="research.html"
+          >The research <span>↗</span></a
+        >
+        <div class="world-switch" role="group" aria-label="Visual world">
+          <button data-world-button="nerdy" aria-pressed="true">terminal</button
+          ><button data-world-button="creative" aria-pressed="false">
+            darkroom
+          </button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <section class="page-heading">
+        <div>
+          <div class="eyebrow">
+            <span class="orange-line"></span> // VIDEO IN THE WRONG PLACE
+          </div>
+          <h1>motion,<br />meet cells<span>_</span></h1>
+          <p>a video player with a deeply questionable choice of screen.</p>
+        </div>
+        <div class="heading-aside">
+          <span class="system-note"
+            >[ <strong id="world-status">terminal / ready</strong> ] &nbsp;
+            v1.2.2</span
+          ><button id="native-button" class="button secondary native-top">
+            <svg><use href="#i-link" /></svg> Connect LibreOffice
+            <span class="connection-dot"></span>
+          </button>
+        </div>
+      </section>
+      <div class="studio">
+        <aside class="settings-panel">
+          <div class="panel-heading">
+            <span class="step">01</span>
+            <h2>Your source</h2>
+          </div>
+          <div class="source-tabs" role="tablist" aria-label="Video source">
+            <button
+              id="file-tab"
+              role="tab"
+              aria-selected="true"
+              class="active"
+            >
+              <svg><use href="#i-upload" /></svg>Video file</button
+            ><button
+              id="camera-tab"
+              tabindex="-1"
+              role="tab"
+              aria-selected="false"
+            >
+              <svg><use href="#i-camera" /></svg>Webcam
+            </button>
+          </div>
+          <div id="file-source" role="tabpanel" aria-labelledby="file-tab">
+            <label class="dropzone" id="dropzone" tabindex="0" for="file-input"
+              ><span class="upload-icon"
+                ><svg><use href="#i-upload" /></svg></span
+              ><strong>drop something that moves</strong
+              ><span>or <b>browse files</b></span
+              ><small>MP4, WebM, MOV · up to 100 MB</small></label
+            ><input type="file" id="file-input" accept="video/*,.json" hidden />
+            <div class="source-file">
+              <span class="file-badge"
+                ><svg><use href="#i-play" /></svg
+              ></span>
+              <div>
+                <strong id="source-name">Blue hour</strong
+                ><small id="source-detail">Sample animation · 6 seconds</small>
+              </div>
+              <span class="loaded-dot"></span>
+            </div>
+            <button class="sample-button" id="sample-button">
+              ↻ &nbsp; Load the sample animation
+            </button>
+          </div>
+          <div
+            id="camera-source"
+            role="tabpanel"
+            aria-labelledby="camera-tab"
+            hidden
+          >
+            <div class="camera-intro">
+              <svg><use href="#i-camera" /></svg
+              ><strong>A live feed, made of cells.</strong>
+              <p>
+                Your camera stays on your device. Allow access when your browser
+                asks.
+              </p>
+              <button class="button primary" id="start-camera">
+                Enable camera</button
+              ><button class="button secondary" id="stop-camera" hidden>
+                Turn camera off
+              </button>
+              <p
+                class="microcopy"
+                id="camera-status"
+                role="status"
+                aria-live="polite"
+              >
+                Loading camera controls… If this message remains, reload this
+                tab.
+              </p>
+            </div>
+            <details class="camera-help" id="camera-help">
+              <summary>No camera prompt in Arc or Chromium?</summary>
+              <p>
+                Click Enable camera to request access. If nothing pops up, check
+                the camera permission indicator near the address bar and this
+                site's camera settings. Allow camera access or reset it to Ask,
+                then reload this same local URL.
+              </p>
+              <p>
+                On a Mac, open System Settings → Privacy &amp; Security → Camera
+                and allow Arc (or your current browser), then quit and reopen
+                it. Browser and macOS permissions both need to allow access.
+              </p>
+            </details>
+            <label class="switch-line"
+              ><span>Mirror camera</span
+              ><input
+                id="mirror"
+                type="checkbox"
+                checked
+                role="switch" /></label
+            ><button class="button record-button" id="record-button" disabled>
+              <span class="record-dot"></span> Record a 10-second clip
+            </button>
+            <p class="microcopy" id="record-status">
+              Record the live cells to export an animation.
+            </p>
+          </div>
+          <div class="panel-divider"></div>
+          <div class="panel-heading">
+            <span class="step">02</span>
+            <h2>Make it yours</h2>
+            <span class="mini-label">OUTPUT</span>
+          </div>
+          <label class="field-label" for="resolution"
+            >Grid resolution
+            <span id="cell-count-label">2,304 cells</span></label
+          ><select id="resolution">
+            <option value="32">32 × 18 · Lo-fi</option>
+            <option value="48">48 × 27 · Classic</option>
+            <option value="64" selected>64 × 36 · Balanced</option>
+            <option value="96">96 × 54 · Detailed</option>
+            <option value="128">128 × 72 · Extra detail</option>
+          </select>
+          <label class="field-label"
+            >Color palette <span id="palette-count">216 colors</span></label
+          >
+          <div class="palette-options" role="group" aria-label="Color palette">
+            <button
+              class="palette-option active"
+              data-palette="color"
+              aria-pressed="true"
+            >
+              <span class="swatches"><i></i><i></i><i></i><i></i></span
+              >Color</button
+            ><button
+              class="palette-option"
+              data-palette="grayscale"
+              aria-pressed="false"
+            >
+              <span class="swatches"><i></i><i></i><i></i><i></i></span
+              >Gray</button
+            ><button
+              class="palette-option"
+              data-palette="mono"
+              aria-pressed="false"
+            >
+              <span class="swatches mono"><i></i><i></i></span>Mono
+            </button>
+          </div>
+          <div class="two-fields">
+            <div>
+              <label class="field-label" for="fps">Frame rate</label
+              ><select id="fps">
+                <option value="4">4 fps</option>
+                <option value="8" selected>8 fps</option>
+                <option value="12">12 fps</option>
+                <option value="15">15 fps</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label" for="duration">Clip length</label
+              ><select id="duration">
+                <option value="5">5 seconds</option>
+                <option value="10" selected>10 seconds</option>
+                <option value="15">15 seconds</option>
+                <option value="20">20 seconds</option>
+              </select>
+            </div>
+          </div>
+          <label class="switch-line"
+            ><span>Show cell borders</span
+            ><input id="grid-toggle" type="checkbox" checked role="switch"
+          /></label>
+          <details class="advanced">
+            <summary>Advanced conversion</summary>
+            <label class="field-label" for="start-offset"
+              >Start at (seconds)</label
+            ><input
+              id="start-offset"
+              type="number"
+              min="0"
+              step="0.1"
+              value="0"
+            /><label class="field-label" for="backend-url"
+              >Optional FFmpeg backend</label
+            ><input
+              id="backend-url"
+              type="url"
+              placeholder="http://127.0.0.1:8000"
+            />
+            <p class="microcopy">
+              Leave empty to process locally in your browser. A backend receives
+              the selected video file.
+            </p>
+          </details>
+          <button class="button primary convert-button" id="convert-button">
+            <span>Apply settings</span><svg><use href="#i-arrow" /></svg>
+          </button>
+          <div class="privacy-note">
+            <svg><use href="#i-check" /></svg
+            ><span>Local by default. Your footage stays yours.</span>
+          </div>
+        </aside>
+        <section class="workspace" aria-label="Animation preview">
+          <div class="sheet-card">
+            <div class="sheet-titlebar">
+              <div class="document-title">
+                <span class="doc-icon"
+                  ><svg><use href="#i-grid" /></svg></span
+                ><strong id="document-name">Blue hour.cells</strong
+                ><span class="saved-label">● &nbsp; Ready to play</span>
+              </div>
+              <span class="preview-badge">BROWSER PREVIEW</span>
+            </div>
+            <div class="formula-bar">
+              <span id="cell-range">A1:BL36</span
+              ><span class="formula-divider"></span><i>ƒx</i
+              ><span id="formula-text">motion. in a place it shouldn’t be.</span
+              ><span class="live-label" id="live-label" hidden
+                ><i></i> LIVE</span
+              >
+            </div>
+            <div class="canvas-wrap" id="canvas-wrap">
+              <canvas
+                id="sheet-canvas"
+                aria-label="Animated spreadsheet-style preview. Export or connect LibreOffice for actual spreadsheet cells."
+              ></canvas>
+              <div class="canvas-overlay" id="canvas-overlay" hidden>
+                <span class="spinner"></span
+                ><strong id="progress-label">Reading your video…</strong
+                ><progress id="progress" max="100" value="0"></progress
+                ><button id="cancel-convert" class="text-button">Cancel</button>
+              </div>
+            </div>
+            <div class="sheet-tabs">
+              <button class="active">
+                <svg><use href="#i-grid" /></svg> Video cells</button
+              ><span class="sheet-tab-note">one cell = one pixel. somehow.</span
+              ><button
+                class="icon-button"
+                id="fullscreen-button"
+                title="Full screen"
+                aria-label="Full screen"
+              >
+                ⛶
+              </button>
+            </div>
+            <div class="playback">
+              <button class="play-button" id="play-button" aria-label="Pause">
+                <svg><use href="#i-pause" /></svg></button
+              ><button
+                class="icon-button"
+                id="restart-button"
+                aria-label="Restart"
+                title="Restart"
+              >
+                ↺</button
+              ><span class="timecode" id="current-time">00:00</span
+              ><input
+                type="range"
+                id="timeline"
+                min="0"
+                max="47"
+                value="0"
+                aria-label="Frame timeline"
+              /><span class="timecode duration-code" id="total-time">00:06</span
+              ><button
+                class="icon-button"
+                id="step-button"
+                title="Next frame"
+                aria-label="Next frame"
+              >
+                ▸│</button
+              ><span class="playback-divider"></span
+              ><button
+                class="loop-button active"
+                id="loop-button"
+                aria-pressed="true"
+                title="Loop playback"
+              >
+                ↻ <span>Loop</span>
+              </button>
+            </div>
+          </div>
+          <div class="preview-footer">
+            <span
+              ><span class="status-dot"></span
+              ><strong id="render-status">Playing sample</strong></span
+            >
+            <div>
+              <span id="stats-size">64 × 36</span
+              ><span
+                title="Requested frame rate; actual Calc speed varies"
+                id="stats-fps"
+                >8 fps</span
+              ><span id="stats-frames">48 frames</span>
+            </div>
+          </div>
+          <div class="export-card">
+            <div class="export-art">
+              <div class="mini-cell-grid">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              </div>
+              <span>↗</span>
+            </div>
+            <div class="export-copy">
+              <span class="eyebrow">// YES, THEY’RE ACTUAL CELLS</span>
+              <h2>your spreadsheet called.<br />it’s moving now.</h2>
+              <p>
+                Export real colored cells and an embedded LibreOffice player.
+              </p>
+              <div class="export-tags">
+                <span>.ODS FORMAT</span><span>REAL CELL COLORS</span
+                ><span>OPEN SOURCE</span>
+              </div>
+            </div>
+            <div class="export-actions">
+              <button class="button dark" id="export-button">
+                <svg><use href="#i-download" /></svg> Export LibreOffice
+                <span>↗</span></button
+              ><button class="text-button" id="json-button">
+                Download frame data <span>↓</span>
+              </button>
+            </div>
+          </div>
+          <p class="honesty-note">
+            Preview runs in a browser grid. Export opens in LibreOffice Calc;
+            animation needs its included macro. Live Calc playback needs the
+            local companion.
+          </p>
+          <div class="terminal-strip">
+            <strong>$</strong><code>python3 -m native.cli play clip.mp4</code
+            ><button class="text-button" id="cli-button">
+              no browser? no problem ↗
+            </button>
+          </div>
+        </section>
+      </div>
+      <footer>
+        <span
+          ><a href="https://somm.tf" target="_blank" rel="noopener"
+            >som chandra</a
+          >
+          <span class="footer-cross">✳</span> made at an unreasonable
+          hour.</span
+        >
+        <div>
+          <span id="footer-metric">2,304 cells. Endless possibilities.</span
+          ><button class="text-button" id="download-source">
+            Download the toolkit ↗
+          </button>
+        </div>
+      </footer>
+    </main>
+    <dialog id="help-dialog">
+      <div class="dialog-header">
+        <span class="eyebrow">A DIFFERENT KIND OF PLAYER</span
+        ><button class="close-dialog icon-button" aria-label="Close">✕</button>
+      </div>
+      <h2>Small cells. Moving pictures.</h2>
+      <p>
+        Celluloid samples each video frame, scales it down, and maps its pixels
+        to a color palette. Every square you see represents one spreadsheet
+        cell.
+      </p>
+      <ol>
+        <li>
+          <strong>Pick your source.</strong> Drop a video or enable your webcam.
+          The sample animation is ready to explore.
+        </li>
+        <li>
+          <strong>Find your look.</strong> Choose a grid, color palette, and
+          frame rate. Apply settings to reconvert the source.
+        </li>
+        <li>
+          <strong>Make it a spreadsheet.</strong> Export an .ods file. In
+          desktop LibreOffice, allow macros for your trusted export, then use
+          Tools → Macros → Run Macro → this document → Standard → Playback →
+          PlayVideo.
+        </li>
+        <li>
+          <strong>Go live in Calc.</strong> Run the local companion and connect
+          it to stream uploaded video or live webcam frames into actual cells.
+        </li>
+      </ol>
+      <p class="callout">
+        The exported file contains real cell colors and animation code.
+        LibreOffice playback speed depends on your computer and grid size. Audio
+        is not included.
+      </p>
+      <a href="research.html" class="button secondary"
+        >Read the architecture & research ↗</a
+      >
+    </dialog>
+    <dialog id="native-dialog">
+      <div class="dialog-header">
+        <span class="eyebrow">THE REAL SPREADSHEET EXPERIENCE</span
+        ><button class="close-dialog icon-button" aria-label="Close">✕</button>
+      </div>
+      <h2>Let Calc be the screen.</h2>
+      <p>
+        The local companion opens a fresh LibreOffice spreadsheet and changes
+        its cell colors as your video or webcam plays.
+      </p>
+      <ol>
+        <li>
+          <a href="downloads/toolkit.zip" download>Download the toolkit</a> and
+          extract it. The included setup launcher installs LibreOffice and
+          checks its Python connection.
+        </li>
+        <li>
+          From the extracted folder, run:
+          <pre>
+Linux / macOS:  bash setup.sh
+Windows:        .\setup.cmd</pre
+          >
+          It prints a local URL and a temporary pairing token. Open that URL for
+          the most reliable camera and Calc connection.
+        </li>
+        <li>
+          Paste the token below, connect, then press Play or start your webcam.
+        </li>
+      </ol>
+      <label class="field-label" for="bridge-url">Companion address</label
+      ><input id="bridge-url" type="url" value="http://127.0.0.1:8765" /><label
+        class="field-label"
+        for="bridge-token"
+        >Pairing token</label
+      ><input
+        id="bridge-token"
+        type="password"
+        autocomplete="off"
+        placeholder="Paste the token printed by the companion"
+      />
+      <p class="microcopy">
+        When using the hosted app, the companion also needs
+        <code>--allow-origin</code> with this site's origin. Your browser may
+        require local network permission; opening the companion's local URL
+        avoids this restriction.
+      </p>
+      <div class="dialog-actions">
+        <button class="button primary" id="connect-button">
+          Connect to Calc</button
+        ><button class="button secondary" id="disconnect-button" disabled>
+          Disconnect
+        </button>
+      </div>
+      <p id="bridge-status" role="status">
+        Not connected. No spreadsheet is being controlled.
+      </p>
+    </dialog>
+    <dialog id="cli-dialog">
+      <div class="dialog-header">
+        <span class="eyebrow">// THE TERMINAL ROUTE</span
+        ><button class="close-dialog icon-button" aria-label="Close">✕</button>
+      </div>
+      <h2>same cells. no browser.</h2>
+      <p>
+        The CLI handles files or a live camera directly. Install FFmpeg and a
+        matching LibreOffice + Python UNO installation, then run from the
+        repository root.
+      </p>
+      <pre>
+# video → portable indexed frames
+python3 -m native.cli convert clip.mp4 -o clip.celluloid.json
+
+# video → actual Calc cells
+python3 -m native.cli play clip.mp4 --width 48 --palette grayscale --hold
+
+# live camera → actual Calc cells (Linux)
+python3 -m native.cli webcam --device /dev/video0</pre
+      >
+      <p>
+        For macOS, use <code>--device 0:none</code>. On Windows, use the
+        camera’s DirectShow name, such as
+        <code>--device "Integrated Camera"</code>. Hardware capture settings
+        depend on your device.
+      </p>
+      <p class="callout">
+        The application needs no web GUI. Calc still opens a window to display
+        the cells. Use <code>--headless --save final.ods</code> for scripted
+        file processing. Press Ctrl+C to stop streaming.
+      </p>
+      <a class="button primary" href="downloads/toolkit.zip" download
+        >download the single-repo toolkit ↓</a
+      >
+    </dialog>
+    <div id="toast" role="status" aria-live="polite" hidden></div>
+    <video id="source-video" muted playsinline hidden></video>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

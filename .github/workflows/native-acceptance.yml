@@ -1,0 +1,25 @@
+name: Real LibreOffice acceptance (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  calc:
+    name: Matched distribution Calc and Python UNO
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y libreoffice-calc python3-uno
+      # Use the distro interpreter and UNO together, rather than setup-python.
+      - name: Actual cell readbacks, CLI playback and saved ODS reopening
+        timeout-minutes: 3
+        run: /usr/bin/python3 scripts/check-native.py --output "$RUNNER_TEMP/celluloid-final.ods"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: real-calc-final-frame
+          path: ${{ runner.temp }}/celluloid-final.ods
+          if-no-files-found: error

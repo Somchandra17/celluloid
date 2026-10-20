@@ -1,0 +1,29 @@
+name: Bug report
+description: A reproducible problem in the studio, CLI, export or companion.
+body:
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where did it happen?
+      options:
+        - Web studio
+        - Terminal CLI
+        - Native companion
+        - LibreOffice export
+        - Optional conversion API
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps, expected result and actual result
+      description: Include the smallest example you can share safely. No private footage or tokens.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, browser, Python/FFmpeg/LibreOffice version and grid settings as applicable.
+    validations:
+      required: true

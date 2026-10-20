@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en" data-world="nerdy">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="The open-source architecture behind Celluloid: browser video, real LibreOffice cells and webcam streaming."
+    />
+    <title>The research — Celluloid</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="./"
+        ><span class="brand-mark"><i></i><i></i><i></i><i></i></span
+        >celluloid<span class="beta">LAB</span></a
+      ><span class="top-caption">a small experiment by som.</span>
+      <nav><a class="text-button" href="./">Back to the studio ↗</a></nav>
+    </header>
+    <article class="research">
+      <span class="eyebrow">ENGINEERING NOTES / 19 OCTOBER 2026</span>
+      <h1>What if a sheet<br />could be a screen<span>?</span></h1>
+      <p class="intro">
+        One shared frame format. A browser studio. Real spreadsheet cells. Here
+        is the reasoning behind the system, and where its limits are.
+      </p>
+      <h2>The pipeline we built</h2>
+      <div class="pipeline">
+        <strong>Video / webcam</strong> → <strong>Resize + quantize</strong> →
+        <strong>Indexed frames</strong> → <strong>Browser / ODS / Calc</strong>
+      </div>
+      <p>
+        The browser decodes local videos and samples the webcam using standard
+        media APIs. Each tiny sampled frame becomes a row-major array of palette
+        indices. The same data drives the preview, the exported LibreOffice
+        document, and the native Calc companion. For formats your browser cannot
+        decode, an optional
+        <a
+          href="https://fastapi.tiangolo.com/tutorial/request-files/"
+          target="_blank"
+          rel="noopener"
+          >FastAPI upload service</a
+        >
+        uses
+        <a
+          href="https://ffmpeg.org/ffmpeg-filters.html"
+          target="_blank"
+          rel="noopener"
+          >FFmpeg</a
+        >.
+      </p>
+      <h2>Why two players?</h2>
+      <p>
+        A browser can draw small colored rectangles efficiently and capture a
+        camera without installing office software. But that preview is a custom
+        grid, not a real office document. The native companion completes the
+        original idea: it changes
+        <a
+          href="https://api.libreoffice.org/docs/idl/ref/servicecom_1_1sun_1_1star_1_1table_1_1CellProperties.html"
+          target="_blank"
+          rel="noopener"
+          >LibreOffice's CellBackColor properties</a
+        >
+        through UNO, so video and live webcam footage actually pass through
+        spreadsheet cells.
+      </p>
+      <p>
+        The downloadable ODS takes a third route: real styled cells, hidden
+        frame data, and an embedded Basic player. The first frame appears
+        immediately; moving through frames requires permitting the document's
+        macro. There is no video or image laid over the grid.
+      </p>
+      <h2>Could another open-source grid be better?</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Option</th>
+            <th>License</th>
+            <th>Best use here</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Custom Canvas grid</td>
+            <td>MIT application code</td>
+            <td>
+              Small dependency-free video/webcam preview; selected for this
+              build
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a href="https://www.libreoffice.org/licenses/"
+                >LibreOffice Calc</a
+              >
+            </td>
+            <td>MPL 2.0 + component licenses</td>
+            <td>
+              Actual native spreadsheet cells; selected for native playback and
+              export
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a href="https://github.com/glideapps/glide-data-grid"
+                >Glide Data Grid</a
+              >
+            </td>
+            <td>MIT</td>
+            <td>
+              A richer canvas-based interactive grid if editing and selection
+              become central
+            </td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/dream-num/univer">Univer</a></td>
+            <td>Apache 2.0 core</td>
+            <td>
+              A full browser spreadsheet editor; some important features are
+              commercial Pro
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a href="https://github.com/jspreadsheet/ce">Jspreadsheet CE</a>
+            </td>
+            <td>MIT CE</td>
+            <td>
+              Spreadsheet editing; distinguish the community version from Pro
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Those are project-documented licenses and capabilities. The suitability
+        judgments are engineering recommendations, not a head-to-head speed
+        benchmark. A complete office-suite server would add substantial
+        machinery without being needed for local video sampling.
+      </p>
+      <h2>The real bottleneck is formatting</h2>
+      <p>
+        A 96 × 54 grid has 5,184 cells. At 12 requested frames per second, a
+        full redraw could involve 62,208 cell color changes per second. Calc's
+        data-array API writes values, not arbitrary per-cell background colors.
+        The companion therefore skips unchanged cells and groups adjacent
+        same-color pixels into ranges.
+      </p>
+      <p>
+        Controller notifications are suspended only while preparing an
+        individual frame, then restored in a <code>finally</code> block. This
+        uses LibreOffice's
+        <a
+          href="https://api.libreoffice.org/docs/idl/ref/interfacecom_1_1sun_1_1star_1_1frame_1_1XModel.html"
+          >document controller API</a
+        >. Busy native connections keep only the newest pending frame, keeping
+        the live feed from building up a long queue.
+      </p>
+      <p class="fact">
+        Requested FPS is not a native performance guarantee. The companion
+        reports render time. Begin with 48 × 27 cells and monochrome or
+        grayscale, then measure on your own computer.
+      </p>
+      <h2>Privacy and local connections</h2>
+      <p>
+        Browser conversion and webcam capture run on the device by default.
+        Video is uploaded only when you configure the optional backend. Camera
+        access requires a
+        <a
+          href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia"
+          >secure browser context and permission</a
+        >. Camera tracks stop when you switch sources or turn the camera off.
+      </p>
+      <p>
+        The companion listens on loopback, checks origins and Host headers, and
+        requires a temporary bearer token. A hosted HTTPS page may be prevented
+        from reaching a local HTTP service. The reliable route is opening the
+        same web studio through the companion's local URL. UNO is bound to
+        loopback; it is not an Internet-facing API.
+      </p>
+      <h2>Included, and intentionally bounded</h2>
+      <p>
+        The toolkit contains the whole web source, Python companion, optional
+        FFmpeg API, ODS writer, tests, and research. Clips have at most 240
+        frames, preview grids at most 160 × 90 cells, and animated ODS exports
+        at most 96 × 54. No audio is included. Converted data lives in tab
+        memory until downloaded; there is no account system or cloud media
+        storage.
+      </p>
+      <p>
+        This is a working prototype pipeline, not a public multi-user
+        transcoding service. The included local FFmpeg backend has size,
+        concurrency, and timeout limits; Internet exposure would additionally
+        need authentication, user quotas and worker isolation.
+      </p>
+      <a class="button dark" href="downloads/toolkit.zip" download
+        >Download the complete toolkit ↓</a
+      >
+      <a class="button secondary" href="./">Make something move ↗</a>
+    </article>
+  </body>
+</html>

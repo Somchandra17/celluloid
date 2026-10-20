@@ -1,0 +1,27 @@
+{
+  "name": "celluloid",
+  "version": "1.2.2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.js",
+    "build": "node scripts/build.mjs",
+    "check:release": "node scripts/check-release.mjs",
+    "format": "prettier --write dist scripts tests docs \"*.md\" vercel.json package.json .github",
+    "format:check": "prettier --check dist scripts tests docs \"*.md\" vercel.json package.json .github"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "jsdom": "^26.1.0",
+    "prettier": "^3.6.2"
+  },
+  "description": "Video and live webcam through real spreadsheet cells. Browser studio, LibreOffice export, native CLI.",
+  "author": {
+    "name": "Som Chandra",
+    "url": "https://somm.tf"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

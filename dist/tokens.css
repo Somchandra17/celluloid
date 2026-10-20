@@ -1,0 +1,79 @@
+/* Som's shared ink spine. Interface colors live here; footage has its own palette. */
+:root {
+  color-scheme: dark;
+  --ink-950: #070707;
+  --ink-900: #0a0a0a;
+  --ink-850: #0e0e0e;
+  --ink-800: #111111;
+  --ink-700: #1a1a1a;
+  --ink-600: #2a2a2a;
+  --ink-500: #444444;
+  --ink-400: #7a7a7a;
+  --ink-300: #9a9a9a;
+  --ink-200: #c4c4c4;
+  --ink-100: #e8e8e8;
+  --paper-cream: #e9dfca;
+  --accent-nerdy: #7fb07f;
+  --accent-nerdy-dim: #4f6e4f;
+  --accent-creative: #f0c6cf;
+  --accent-creative-dim: #a98088;
+  --world: var(--accent-nerdy);
+  --world-dim: var(--accent-nerdy-dim);
+  --world-wash: #7fb07f0a;
+  --world-rule: #7fb07f36;
+  --world-contrast: #101910;
+  --world-glow: #7fb07f08;
+  --term-error: #e99797;
+  --term-warn: #dbbe83;
+  --grain-opacity: 0.16;
+  --reveal-duration: 200ms;
+  --reveal-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --radius: 0;
+  --space-section: 48px;
+  --font-sans: "Space Grotesk", sans-serif;
+  --font-mono: "Geist Mono", monospace;
+  --studio-gap: 24px;
+  --panel-padding: 24px;
+  --canvas-ground: var(--ink-950);
+  --canvas-chrome: var(--ink-850);
+  --canvas-rule: var(--ink-600);
+  --canvas-label: var(--ink-300);
+  --canvas-corner: var(--world-dim);
+  --canvas-grid: #e8e8e824;
+  --swatch-red: #b85a70;
+  --swatch-gold: #d2b583;
+  --swatch-green: #7fb07f;
+  --swatch-blue: #7f95b0;
+  --swatch-gray-1: #444444;
+  --swatch-gray-2: #777777;
+  --swatch-gray-3: #aaaaaa;
+  --swatch-gray-4: #dddddd;
+  --grain-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.94' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.23' filter='url(%23n)'/%3E%3C/svg%3E");
+  --vignette: radial-gradient(
+    ellipse at 40% 30%,
+    transparent 40%,
+    #00000030 100%
+  );
+  --bg: var(--ink-900);
+  --paper: var(--ink-800);
+  --ink: var(--ink-100);
+  --muted: var(--ink-300);
+  --line: var(--ink-600);
+  --accent: var(--world);
+  --green: var(--world);
+  --font: var(--font-sans);
+  --display: var(--font-sans);
+}
+[data-world="creative"] {
+  --world: var(--accent-creative);
+  --world-dim: var(--accent-creative-dim);
+  --world-wash: #f0c6cf0b;
+  --world-rule: #f0c6cf36;
+  --world-contrast: #201719;
+  --world-glow: #f0c6cf0a;
+  --grain-opacity: 0.3;
+  --reveal-duration: 440ms;
+  --reveal-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --studio-gap: 32px;
+  --panel-padding: 28px;
+}
